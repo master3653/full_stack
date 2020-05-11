@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}登录账号{% endblock %}
+{% block content %}
+    <h1>登录</h1>
+    <p>请根据表单登录：</p>
+    <form action="." method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="登录"></p>
+    </form>
+     <div class="social">
+  <ul>
+    <li class="facebook"><a href="{% url "social:begin" "qq" %}">QQ登录</a></li>
+    <li class="facebook"><a href="{% url "qq_login" %}">腾讯登录</a></li>
+  </ul>
+
+
+
+</div>
+{% endblock %}

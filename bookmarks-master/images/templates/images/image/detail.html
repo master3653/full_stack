@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ image.title }}{% endblock %}
+{% block content %}
+    <h1>{{ image.title }}</h1>
+    {% load thumbnail %}
+{% thumbnail image.image "300" as im %}
+<a href="{{ image.image.url }}">
+<img src="{{ im.url }}" class="image-detail">
+</a>
+{% endthumbnail %}
+<!--删除Pillow重新安装，PIL的坑，会出现OSError错误 decoder zip not available,Pillow版本太低-->
+
+    {% with total_likes=image.user_like.count user_like=image.user_like.all %}
+    <div class="image-info">
+                <div>
+                    <span class="count">
+                        <span class="total">{{ total_likes }}</span>
+                        like{{ total_likes|pluralize }}
+                    </span>
+                        <span class="count">
+                            <span class="total">{{ total_views }}</span>
+                                view{{ total_views|pluralize }}
+                        </span>
+                    <a href="#" data-id="{{ image.id }}" data-action="{% if request.user in user_like %}un{% endif %}like" class="like button">
+                        {% if request.user not in user_like %}
+                            喜欢
+                        {% else %}
+                            不喜欢
+                        {% endif %}
+                    </a>
+                </div>
+            {{ image.description|linebreaks }}
+        </div>
+    <div class="image-likes">
+    {% for user in image.user_like.all %}
+    <div>
+        <img src="{{ user.profile.photo.url }}">
+        <p>{{ user.first_name }}</p>
+    </div>
+    {% empty %}
+        没有人喜欢这张图片。
+    {% endfor %}
+    </div>
+    {% endwith %}
+{% endblock %}
+
+{% block domready %}
+    $('a.like').click(function(e){
+        e.preventDefault();
+        $.post('{% url "images:like" %}',
+            {
+                id: $(this).data('id'),
+                action: $(this).data('action')
+            },
+            function(data){
+                if (data['status'] == 'OK')
+                {
+                    var previous_action = $('a.like').data('action');
+
+                    // toggle data-action
+                    $('a.like').data('action', previous_action == 'like' ? 'unlike' : 'like');
+                    // toggle link text
+                    $('a.like').text(previous_action == 'like' ? '不喜欢' : '喜欢');
+
+                    // update total likes
+                    var previous_likes = parseInt($('span.count .total').text());
+                    $('span.count .total').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+                }
+        });
+
+    });
+{% endblock %}

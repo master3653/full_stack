@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}用户注册{% endblock %}
+{% block content %}
+    <h1>用户注册</h1>
+    <p>请根据表单进行注册</p>
+    <form action="." method="post">
+        {{ user_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="注册"></p>
+    </form>
+{% endblock %}

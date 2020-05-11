@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}用户登录{% endblock %}
+{% block content %}
+  <h1>登录</h1>
+  {% if form.errors %}
+    <p>
+      你的用户名和密码不匹配，请重新输入。
+    </p>
+  {% else %}
+    <p>请根据表单登录，如果您还没有注册，请<a href="{% url "register" %}">点击这里注册</a></p>
+  {% endif %}
+  <div class="login-form">
+    <form action="{% url 'login' %}" method="post">
+      {{ form.as_p }}
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}" />
+      <p><input type="submit" value="登录"></p>
+    </form>
+  <p><a href="{% url "password_reset" %}">忘记密码？</a></p>
+  </div>
+     <div class="social">
+  <ul>
+    <li class="facebook"><a href="{% url "social:begin" "qq" %}">QQ登录</a></li>
+      <li class="facebook"><a href="{% url 'qq_login' %}">腾讯登录</a></li>
+  </ul>
+</div>
+ {% endblock %}

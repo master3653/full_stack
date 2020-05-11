@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>QQ和账户绑定</title>
+{% endblock %}
+
+
+
+{% block content %}
+
+        <form action="." method="post">
+        {{ user_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="注册"></p>
+    </form>
+
+    <!---->
+    <div class="copy-right">
+        <p>© 2017 JunXi. All Rights Reserved</p>
+    </div>
+{% endblock %}
+
